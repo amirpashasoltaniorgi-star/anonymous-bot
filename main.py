@@ -8,14 +8,46 @@ waiting_user = None
 pairs = {}
 
 
+async def find_partner(user_id, context):
+    global waiting_user
+
+    if waiting_user is None:
+        waiting_user = user_id
+        await context.bot.send_message(
+            user_id,
+            "⏳ دنبال یک نفر جدید می‌گردم..."
+        )
+    else:
+        partner = waiting_user
+        waiting_user = None
+
+        if partner == user_id:
+            waiting_user = user_id
+            return
+
+        pairs[user_id] = partner
+        pairs[partner] = user_id
+
+        await context.bot.send_message(
+            user_id,
+            "🎉 یک نفر پیدا شد، چت شروع شد!"
+        )
+
+        await context.bot.send_message(
+            partner,
+            "🎉 یک نفر پیدا شد، چت شروع شد!"
+        )
+
+
 async def start(update: Update, context: ContextTypes.DEFAULT_TYPE):
     keyboard = [
         ["💬 شروع چت ناشناس"],
+        ["🔄 نفر بعدی"],
         ["🔚 پایان چت", "❓ راهنما"]
     ]
 
     await update.message.reply_text(
-        "😍 خوش اومدی به ربات چت ناشناس\n\nیک گزینه رو انتخاب کن:",
+        "😍 به ربات چت ناشناس خوش اومدی\n\nیک گزینه انتخاب کن:",
         reply_markup=ReplyKeyboardMarkup(
             keyboard,
             resize_keyboard=True
@@ -23,71 +55,62 @@ async def start(update: Update, context: ContextTypes.DEFAULT_TYPE):
     )
 
 
-async def handle_message(update: Update, context: ContextTypes.DEFAULT_TYPE):
+async def end_chat(user_id, context, next_chat=False):
     global waiting_user
 
+    if user_id == waiting_user:
+        waiting_user = None
+
+    if user_id in pairs:
+        partner = pairs[user_id]
+
+        del pairs[user_id]
+        del pairs[partner]
+
+        if next_chat:
+            await context.bot.send_message(
+                partner,
+                "🔄 طرف مقابل به چت بعدی رفت."
+            )
+        else:
+            await context.bot.send_message(
+                partner,
+                "🔚 طرف مقابل چت را پایان داد."
+            )
+
+
+async def handle_message(update: Update, context: ContextTypes.DEFAULT_TYPE):
     user_id = update.message.from_user.id
     text = update.message.text
 
     if text == "❓ راهنما":
         await update.message.reply_text(
-            "روی 💬 شروع چت ناشناس بزن تا یک نفر پیدا بشه."
+            "💬 شروع چت: پیدا کردن یک فرد ناشناس\n"
+            "🔄 نفر بعدی: رفتن به چت جدید\n"
+            "🔚 پایان چت: خروج از چت"
         )
         return
 
     if text == "💬 شروع چت ناشناس":
-
         if user_id in pairs:
             await update.message.reply_text(
-                "شما الان داخل چت هستی."
-            )
-            return
-
-        if waiting_user is None:
-            waiting_user = user_id
-            await update.message.reply_text(
-                "⏳ دنبال یک نفر می‌گردم..."
+                "شما الان داخل یک چت هستید."
             )
         else:
-            partner = waiting_user
-            waiting_user = None
+            await find_partner(user_id, context)
+        return
 
-            pairs[user_id] = partner
-            pairs[partner] = user_id
-
-            await update.message.reply_text(
-                "🎉 یک نفر پیدا شد، چت شروع شد!"
-            )
-
-            await context.bot.send_message(
-                partner,
-                "🎉 یک نفر پیدا شد، چت شروع شد!"
-            )
-
+    if text == "🔄 نفر بعدی":
+        await end_chat(user_id, context, True)
+        await find_partner(user_id, context)
         return
 
     if text == "🔚 پایان چت":
+        await end_chat(user_id, context)
 
-        if user_id in pairs:
-            partner = pairs[user_id]
-
-            del pairs[user_id]
-            del pairs[partner]
-
-            await update.message.reply_text(
-                "چت شما پایان یافت."
-            )
-
-            await context.bot.send_message(
-                partner,
-                "طرف مقابل چت را پایان داد."
-            )
-
-        else:
-            await update.message.reply_text(
-                "شما داخل چتی نیستید."
-            )
-
+        await update.message.reply_text(
+            "🔚 از چت خارج شدی."
+        )
         return
 
     if user_id in pairs:
@@ -97,6 +120,7 @@ async def handle_message(update: Update, context: ContextTypes.DEFAULT_TYPE):
             partner,
             text
         )
+
     else:
         await update.message.reply_text(
             "برای شروع چت روی 💬 شروع چت ناشناس بزن."
@@ -106,9 +130,11 @@ async def handle_message(update: Update, context: ContextTypes.DEFAULT_TYPE):
 app = Application.builder().token(TOKEN).build()
 
 app.add_handler(CommandHandler("start", start))
+
 app.add_handler(
     MessageHandler(filters.TEXT & ~filters.COMMAND, handle_message)
 )
 
-print("Bot is running...")
+print("🔥 Bot is running...")
+
 app.run_polling()

@@ -71,7 +71,7 @@ async def start(update: Update, context: ContextTypes.DEFAULT_TYPE):
         )
     )
 
-
+   await find_partner(update.effective_user.id, context)
 async def end_chat(user_id, context, next_chat=False):
     global waiting_user
 

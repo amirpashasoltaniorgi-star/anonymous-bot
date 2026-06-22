@@ -77,7 +77,50 @@ async def end_chat(user_id, context, next_chat=False):
                 partner,
                 "🔚 طرف مقابل چت را پایان داد."
             )
+async def handle_media(update: Update, context: ContextTypes.DEFAULT_TYPE):
+    user_id = update.message.from_user.id
 
+    if user_id not in pairs:
+        await update.message.reply_text(
+            "برای شروع چت روی 💬 شروع چت ناشناس بزن."
+        )
+        return
+
+    partner = pairs[user_id]
+    msg = update.message
+
+    if msg.photo:
+        await context.bot.send_photo(
+            partner,
+            msg.photo[-1].file_id,
+            caption=msg.caption
+        )
+
+    elif msg.voice:
+        await context.bot.send_voice(
+            partner,
+            msg.voice.file_id
+        )
+
+    elif msg.video:
+        await context.bot.send_video(
+            partner,
+            msg.video.file_id,
+            caption=msg.caption
+        )
+
+    elif msg.document:
+        await context.bot.send_document(
+            partner,
+            msg.document.file_id,
+            caption=msg.caption
+        )
+
+    elif msg.sticker:
+        await context.bot.send_sticker(
+            partner,
+            msg.sticker.file_id
+        )
 
 async def handle_message(update: Update, context: ContextTypes.DEFAULT_TYPE):
     user_id = update.message.from_user.id
@@ -134,7 +177,16 @@ app.add_handler(CommandHandler("start", start))
 app.add_handler(
     MessageHandler(filters.TEXT & ~filters.COMMAND, handle_message)
 )
-
+app.add_handler(
+    MessageHandler(
+        filters.PHOTO |
+        filters.VOICE |
+        filters.VIDEO |
+        filters.DOCUMENT |
+        filters.StICKER
+        handle_media
+    )
+)
 print("🔥 Bot is running...")
 
 app.run_polling()

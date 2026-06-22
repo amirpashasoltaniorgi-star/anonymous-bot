@@ -183,7 +183,7 @@ app.add_handler(
         filters.PHOTO |
         filters.VOICE |
         filters.VIDEO |
-        filters.DOCUMENT |
+        filters.Document.ALL.|
         filters.STICKER,
         handle_media
     )

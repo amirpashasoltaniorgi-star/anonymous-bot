@@ -177,17 +177,16 @@ app.add_handler(CommandHandler("start", start))
 app.add_handler(
     MessageHandler(filters.TEXT & ~filters.COMMAND, handle_message)
 )
-
 app.add_handler(
     MessageHandler(
         filters.PHOTO |
         filters.VOICE |
         filters.VIDEO |
-        filters.Document.ALL |
-        
+        filters.Document.ALL,
         handle_media
     )
 )
+
 
 print("🔥 Bot is running...")
 

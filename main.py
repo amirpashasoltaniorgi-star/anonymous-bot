@@ -202,11 +202,6 @@ async def admin(update: Update, context: ContextTypes.DEFAULT_TYPE):
     f"⏳ افراد در انتظار: {waiting}"
 )
 
-    await update.message.reply_text(
-        f"📊 پنل ادمین\n\n"
-        f"👥 تعداد کاربران: {total_users}\n"
-        f"💬 چت‌های فعال: {active_chats}\n"
-        f"⏳ افراد در انتظار: {waiting}"
     
 app = Application.builder().token(TOKEN).build()
 

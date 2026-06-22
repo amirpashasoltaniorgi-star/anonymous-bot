@@ -186,7 +186,23 @@ async def handle_message(update: Update, context: ContextTypes.DEFAULT_TYPE):
             "برای شروع چت روی 💬 شروع چت ناشناس بزن."
         )
 
+async def admin(update: Update, context: ContextTypes.DEFAULT_TYPE):
+    if update.effective_user.id != ADMIN_ID:
+        return
 
+    cursor.execute("SELECT COUNT(*) FROM users")
+    total_users = cursor.fetchone()[0]
+
+    active_chats = len(pairs) // 2
+
+    waiting = 1 if waiting_user else 0
+
+    await update.message.reply_text(
+        f"📊 پنل ادمین\n\n"
+        f"👥 تعداد کاربران: {total_users}\n"
+        f"💬 چت‌های فعال: {active_chats}\n"
+        f"⏳ افراد در انتظار: {waiting}"
+    )
 app = Application.builder().token(TOKEN).build()
 
 app.add_handler(CommandHandler("start", start))

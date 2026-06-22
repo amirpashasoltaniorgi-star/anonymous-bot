@@ -193,8 +193,14 @@ async def admin(update: Update, context: ContextTypes.DEFAULT_TYPE):
     total_users = cursor.fetchone()[0]
 
     active_chats = len(pairs) // 2
-
     waiting = 1 if waiting_user else 0
+
+    await update.message.reply_text(
+        f"📊 پنل ادمین\n\n"
+        f"👥 تعداد کاربران: {total_users}\n"
+        f"💬 چت‌های فعال: {active_chats}\n"
+        f"⏳ افراد در انتظار: {waiting}"
+    )
 
     await update.message.reply_text(
         f"📊 پنل ادمین\n\n"

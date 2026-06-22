@@ -202,7 +202,7 @@ async def admin(update: Update, context: ContextTypes.DEFAULT_TYPE):
         f"👥 تعداد کاربران: {total_users}\n"
         f"💬 چت‌های فعال: {active_chats}\n"
         f"⏳ افراد در انتظار: {waiting}"
-    )
+     await find_partner(update.effective_user.id, context)
 app = Application.builder().token(TOKEN).build()
 
 app.add_handler(CommandHandler("start", start))

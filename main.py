@@ -184,7 +184,7 @@ app.add_handler(
         filters.VOICE |
         filters.VIDEO |
         filters.Document.ALL |
-        filters.STICKER,
+        
         handle_media
     )
 )

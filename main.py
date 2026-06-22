@@ -6,7 +6,18 @@ TOKEN = os.getenv("BOT_TOKEN")
 
 waiting_user = None
 pairs = {}
+import sqlite3
 
+conn = sqlite3.connect("users.db", check_same_thread=False)
+cursor = conn.cursor()
+
+cursor.execute("""
+CREATE TABLE IF NOT EXISTS users (
+    user_id INTEGER PRIMARY KEY
+)
+""")
+
+conn.commit()
 
 async def find_partner(user_id, context):
     global waiting_user

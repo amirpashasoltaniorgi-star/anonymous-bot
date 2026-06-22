@@ -48,7 +48,12 @@ async def find_partner(user_id, context):
             partner,
             "🎉 یک نفر پیدا شد، چت شروع شد!"
         )
-
+def save_user(user_id):
+    cursor.execute(
+        "INSERT OR IGNORE INTO users (user_id) VALUES (?)",
+        (user_id,)
+    )
+    conn.commit()
 
 async def start(update: Update, context: ContextTypes.DEFAULT_TYPE):
     save_user(update.effective_user.id)

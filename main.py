@@ -18,7 +18,14 @@ CREATE TABLE IF NOT EXISTS users (
 )
 """)
 conn.commit()
+cursor.execute("""
+CREATE TABLE IF NOT EXISTS reports (
+    user_id INTEGER PRIMARY KEY,
+    count INTEGER DEFAULT 0
+)
+""")
 
+conn.commit()
 
 # ---------- USER SAVE ----------
 def save_user(user_id):

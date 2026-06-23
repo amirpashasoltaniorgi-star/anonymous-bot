@@ -101,9 +101,11 @@ async def handle_message(update: Update, context: ContextTypes.DEFAULT_TYPE):
     text = update.message.text
 
     if text == "❓ راهنما":
-        await update.message.reply_text(
-            "💬 شروع چت\n🔄 نفر بعدی\n🔚 پایان چت"
-    if text == "🚨 گزارش کاربر":
+    await update.message.reply_text(
+        "💬 شروع چت\n🔄 نفر بعدی\n🔚 پایان چت"
+    )
+    return
+    
 
     if user_id not in pairs:
         await update.message.reply_text("❌ الان داخل چت نیستی")

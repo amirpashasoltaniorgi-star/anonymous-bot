@@ -111,25 +111,7 @@ async def handle_message(update: Update, context: ContextTypes.DEFAULT_TYPE):
             "💬 شروع چت\n🔄 نفر بعدی\n🔚 پایان چت"
         )
   
-     return
-        if text == "🚨 گزارش کاربر":
-
-        if user_id not in pairs:
-            await update.message.reply_text("❌ الان داخل چت نیستی")
-            return
-
-        partner = pairs[user_id]
-
-        cursor.execute("""
-        INSERT INTO reports(user_id,count)
-        VALUES(?,1)
-        ON CONFLICT(user_id)
-        DO UPDATE SET count=count+1
-        """, (partner,))
-        conn.commit()
-
-        await update.message.reply_text("✅ گزارش ثبت شد")
-        return
+     
 if text == "🚨 گزارش کاربر":
 
         if user_id not in pairs:

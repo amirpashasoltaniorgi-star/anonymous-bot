@@ -104,7 +104,7 @@ async def handle_message(update: Update, context: ContextTypes.DEFAULT_TYPE):
         await update.message.reply_text(
             "💬 شروع چت\n🔄 نفر بعدی\n🔚 پایان چت"
         )
-  if text == "🚨 گزارش کاربر":
+    if text == "🚨 گزارش کاربر":
 
     if user_id not in pairs:
         await update.message.reply_text("❌ الان داخل چت نیستی")

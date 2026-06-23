@@ -233,7 +233,13 @@ async def admin(update: Update, context: ContextTypes.DEFAULT_TYPE):
 
     active_chats = len(pairs) // 2
     waiting = 1 if waiting_user else 0
+cursor.execute("""
+SELECT COUNT(*)
+FROM reports
+WHERE count >= 1
+""")
 
+reported_users = cursor.fetchone()[0]
     await update.message.reply_text(
         f"📊 پنل ادمین\n\n"
         f"👥 کاربران: {total_users}\n"

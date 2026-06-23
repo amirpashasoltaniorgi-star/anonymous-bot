@@ -96,56 +96,56 @@ async def end_chat(user_id, context, next_chat=False):
 
 
 # ---------- MESSAGE ----------
+    # ---------- MESSAGE ----------
 async def handle_message(update: Update, context: ContextTypes.DEFAULT_TYPE):
     user_id = update.message.from_user.id
     text = update.message.text
 
     if text == "❓ راهنما":
-    await update.message.reply_text(
-        "💬 شروع چت\n🔄 نفر بعدی\n🔚 پایان چت"
-    )
-    return
-    
-
-    if user_id not in pairs:
-        await update.message.reply_text("❌ الان داخل چت نیستی")
+        await update.message.reply_text(
+            "💬 شروع چت\n🔄 نفر بعدی\n🔚 پایان چت"
+        )
         return
 
-    partner = pairs[user_id]
+    if text == "🚨 گزارش کاربر":
+        if user_id not in pairs:
+            await update.message.reply_text("❌ الان داخل چت نیستی")
+            return
 
-    cursor.execute(
-        "INSERT OR IGNORE INTO reports(user_id,count) VALUES(?,0)",
-        (partner,)
-    )
+        partner = pairs[user_id]
 
-    cursor.execute(
-        "UPDATE reports SET count=count+1 WHERE user_id=?",
-        (partner,)
-    )
+        cursor.execute(
+            "INSERT OR IGNORE INTO reports(user_id,count) VALUES(?,0)",
+            (partner,)
+        )
 
-    conn.commit()
+        cursor.execute(
+            "UPDATE reports SET count=count+1 WHERE user_id=?",
+            (partner,)
+        )
 
-    cursor.execute(
-        "SELECT count FROM reports WHERE user_id=?",
-        (partner,)
-    )
+        conn.commit()
 
-    report_count = cursor.fetchone()[0]
+        cursor.execute(
+            "SELECT count FROM reports WHERE user_id=?",
+            (partner,)
+        )
 
-    await update.message.reply_text(
-        f"✅ گزارش ثبت شد\nتعداد گزارش: {report_count}"
-    )
+        report_count = cursor.fetchone()[0]
 
-    await context.bot.send_message(
-        ADMIN_ID,
-        f"🚨 گزارش جدید\n\n"
-        f"گزارش‌دهنده: {user_id}\n"
-        f"کاربر گزارش‌شده: {partner}\n"
-        f"تعداد گزارش‌ها: {report_count}"
-    )
+        await update.message.reply_text(
+            f"✅ گزارش ثبت شد\nتعداد گزارش: {report_count}"
+        )
 
-    return
-     
+        await context.bot.send_message(
+            ADMIN_ID,
+            f"🚨 گزارش جدید\n\n"
+            f"گزارش‌دهنده: {user_id}\n"
+            f"کاربر گزارش‌شده: {partner}\n"
+            f"تعداد گزارش‌ها: {report_count}"
+        )
+
+        return
     if text == "💬 شروع چت ناشناس":
         if user_id in pairs:
             await update.message.reply_text("شما داخل چت هستید")
@@ -221,7 +221,7 @@ async def handle_message(update: Update, context: ContextTypes.DEFAULT_TYPE):
 
 
 # ---------- MEDIA ----------
-async def handle_media(update: Update, context: ContextTypes.DEFAULT_TYPE):
+
     user_id = update.message.from_user.id
 
     if user_id not in pairs:

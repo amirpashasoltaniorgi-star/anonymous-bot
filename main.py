@@ -34,12 +34,6 @@ def save_user(user_id):
         (user_id,)
     )
     conn.commit()
-def is_banned(user_id):
-    cursor.execute(
-        "SELECT user_id FROM banned WHERE user_id=?",
-        (user_id,)
-    )
-    return cursor.fetchone() is not None
 
 # ---------- FIND PARTNER ----------
 async def find_partner(user_id, context):
@@ -274,7 +268,7 @@ reported_users = cursor.fetchone()[0]
         f"👥 کاربران: {total_users}\n"
         f"💬 چت فعال: {active_chats}\n"
         f"⏳ در انتظار: {waiting}"
-    )
+        f"🚨 کاربران گزارش‌شده: {reported_users}"
 async def reports(update: Update, context: ContextTypes.DEFAULT_TYPE):
     if update.effective_user.id != ADMIN_ID:
         return

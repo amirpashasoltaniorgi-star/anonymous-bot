@@ -34,7 +34,12 @@ def save_user(user_id):
         (user_id,)
     )
     conn.commit()
-
+def is_banned(user_id):
+    cursor.execute(
+        "SELECT user_id FROM banned WHERE user_id=?",
+        (user_id,)
+    )
+    return cursor.fetchone() is not None
 
 # ---------- FIND PARTNER ----------
 async def find_partner(user_id, context):

@@ -64,8 +64,10 @@ async def start(update: Update, context: ContextTypes.DEFAULT_TYPE):
     save_user(update.effective_user.id)
 
     keyboard = [
-        ["💬 شروع چت ناشناس"],
+     
+    ["💬 شروع چت ناشناس"],
         ["🔄 نفر بعدی"],
+       ["🚨 گزارش کاربر"]
         ["🔚 پایان چت", "❓ راهنما"]
     ]
 

@@ -106,7 +106,46 @@ async def handle_message(update: Update, context: ContextTypes.DEFAULT_TYPE):
             "💬 شروع چت\n🔄 نفر بعدی\n🔚 پایان چت"
         )
         return
+    if text == "🚨 گزارش کاربر":
 
+        if user_id not in pairs:
+            await update.message.reply_text("❌ الان داخل چت نیستی")
+            return
+
+        partner = pairs[user_id]
+
+        cursor.execute(
+            "INSERT OR IGNORE INTO reports(user_id,count) VALUES(?,0)",
+            (partner,)
+        )
+
+        cursor.execute(
+            "UPDATE reports SET count=count+1 WHERE user_id=?",
+            (partner,)
+        )
+
+        conn.commit()
+
+        cursor.execute(
+            "SELECT count FROM reports WHERE user_id=?",
+            (partner,)
+        )
+
+        report_count = cursor.fetchone()[0]
+
+        await update.message.reply_text(
+            f"✅ گزارش ثبت شد\nتعداد گزارش: {report_count}"
+        )
+
+        await context.bot.send_message(
+            ADMIN_ID,
+            f"🚨 گزارش جدید\n\n"
+            f"گزارش‌دهنده: {user_id}\n"
+            f"کاربر گزارش‌شده: {partner}\n"
+            f"تعداد گزارش‌ها: {report_count}"
+        )
+
+        return
     if text == "💬 شروع چت ناشناس":
         if user_id in pairs:
             await update.message.reply_text("شما داخل چت هستید")

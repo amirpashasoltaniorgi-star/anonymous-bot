@@ -64,8 +64,9 @@ async def start(update: Update, context: ContextTypes.DEFAULT_TYPE):
     save_user(update.effective_user.id)
 
     keyboard = [
+    ["💬 شروع چت ناشناس"],
     ["🚨 گزارش کاربر"],
-    ["🔚 پایان چت"],
+    ["🔚 پایان چت", "❓ راهنما"]
 ]
     await update.message.reply_text(
         "😍 به ربات چت ناشناس خوش اومدی",

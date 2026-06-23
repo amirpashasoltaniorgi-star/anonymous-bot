@@ -221,7 +221,29 @@ async def admin(update: Update, context: ContextTypes.DEFAULT_TYPE):
         f"💬 چت فعال: {active_chats}\n"
         f"⏳ در انتظار: {waiting}"
     )
+async def reports(update: Update, context: ContextTypes.DEFAULT_TYPE):
+    if update.effective_user.id != ADMIN_ID:
+        return
 
+    cursor.execute("""
+    SELECT user_id,count
+    FROM reports
+    ORDER BY count DESC
+    LIMIT 20
+    """)
+
+    rows = cursor.fetchall()
+
+    if not rows:
+        await update.message.reply_text("هیچ گزارشی ثبت نشده")
+        return
+
+    text = "🚨 لیست گزارش‌ها\n\n"
+
+    for user_id, count in rows:
+        text += f"👤 {user_id} | {count} گزارش\n"
+
+    await update.message.reply_text(text)
 
 # ---------- APP ----------
 app = Application.builder().token(TOKEN).build()

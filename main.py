@@ -146,6 +146,12 @@ async def handle_message(update: Update, context: ContextTypes.DEFAULT_TYPE):
 
     return
      
+if text == "❓ راهنما":
+    await update.message.reply_text(
+        "💬 شروع چت\n🔄 نفر بعدی\n🔚 پایان چت"
+    )
+    return
+
 if text == "🚨 گزارش کاربر":
 
         if user_id not in pairs:

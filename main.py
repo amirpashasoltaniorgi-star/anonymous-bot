@@ -298,7 +298,7 @@ async def admin(update: Update, context: ContextTypes.DEFAULT_TYPE):
     WHERE count >= 1
     """)
 
-    reported_users = cursor.fetchone()[0]
+    
 
     await update.message.reply_text(
         f"📊 پنل ادمین\n\n"

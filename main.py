@@ -119,7 +119,7 @@ async def end_chat(user_id, context, next_chat=False):
             pass
 
 
-# ---------- MESSAGE ----------
+
     # ---------- MESSAGE ----------
 async def handle_message(update: Update, context: ContextTypes.DEFAULT_TYPE):
     user_id = update.message.from_user.id
@@ -283,8 +283,8 @@ async def handle_media(update: Update, context: ContextTypes.DEFAULT_TYPE):
     
 
 
-# ---------- ADMIN ----------
-# ---------- ADMIN ----------
+
+
     # ---------- ADMIN ----------
 async def admin(update: Update, context: ContextTypes.DEFAULT_TYPE):
     if update.effective_user.id != ADMIN_ID:

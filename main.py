@@ -324,13 +324,43 @@ async def reports(update: Update, context: ContextTypes.DEFAULT_TYPE):
         text += f"👤 {user_id} | {count} گزارش\n"
 
     await update.message.reply_text(text)
+async def broadcast(update: Update, context: ContextTypes.DEFAULT_TYPE):
+    if update.effective_user.id != ADMIN_ID:
+        return
 
+    if not context.args:
+        await update.message.reply_text(
+            "استفاده:\n/broadcast متن پیام"
+        )
+        return
+
+    message = " ".join(context.args)
+
+    cursor.execute("SELECT user_id FROM users")
+    users = cursor.fetchall()
+
+    sent = 0
+
+    for user in users:
+        try:
+            await context.bot.send_message(
+                user[0],
+                f"📢 پیام مدیریت:\n\n{message}"
+            )
+            sent += 1
+        except:
+            pass
+
+    await update.message.reply_text(
+        f"✅ پیام برای {sent} کاربر ارسال شد"
+    )
 # ---------- APP ----------
 app = Application.builder().token(TOKEN).build()
 
 app.add_handler(CommandHandler("start", start))
 app.add_handler(CommandHandler("admin", admin))
 app.add_handler(CommandHandler("reports", reports))
+app.add_handler(CommandHandler("broadcast", broadcast))
 
 app.add_handler(MessageHandler(filters.TEXT & ~filters.COMMAND, handle_message))
 app.add_handler(MessageHandler(

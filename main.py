@@ -367,6 +367,31 @@ async def broadcast(update: Update, context: ContextTypes.DEFAULT_TYPE):
     await update.message.reply_text(
         f"✅ پیام برای {sent} کاربر ارسال شد"
     )
+
+
+async def ban(update: Update, context: ContextTypes.DEFAULT_TYPE):
+
+    if update.effective_user.id != ADMIN_ID:
+        return
+
+    if not context.args:
+        await update.message.reply_text(
+            "استفاده:\n/ban user_id"
+        )
+        return
+
+    user_id = int(context.args[0])
+
+    cursor.execute(
+        "INSERT OR IGNORE INTO banned_users(user_id) VALUES(?)",
+        (user_id,)
+    )
+
+    conn.commit()
+
+    await update.message.reply_text(
+        f"✅ کاربر {user_id} بن شد"
+    )
 # ---------- APP ----------
 app = Application.builder().token(TOKEN).build()
 

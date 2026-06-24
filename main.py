@@ -178,67 +178,30 @@ async def handle_message(update: Update, context: ContextTypes.DEFAULT_TYPE):
         return
 
 
-        if user_id not in pairs:
-            await update.message.reply_text("❌ الان داخل چت نیستی")
-            return
-
-        partner = pairs[user_id]
-
-        cursor.execute(
-            "INSERT OR IGNORE INTO reports(user_id,count) VALUES(?,0)",
-            (partner,)
-        )
-
-        cursor.execute(
-            "UPDATE reports SET count=count+1 WHERE user_id=?",
-            (partner,)
-        )
-
-        conn.commit()
-
-        cursor.execute(
-            "SELECT count FROM reports WHERE user_id=?",
-            (partner,)
-        )
-
-        report_count = cursor.fetchone()[0]
-
-        await update.message.reply_text(
-            f"✅ گزارش ثبت شد\nتعداد گزارش: {report_count}"
-        )
-
-        await context.bot.send_message(
-            ADMIN_ID,
-            f"🚨 گزارش جدید\n\n"
-            f"گزارش‌دهنده: {user_id}\n"
-            f"کاربر گزارش‌شده: {partner}\n"
-            f"تعداد گزارش‌ها: {report_count}"
-        )
-
-        return
+        
         if text == "👦 پسر":
-            cursor.execute(...)
-            "INSERT OR REPLACE INTO genders(user_id, gender) VALUES(?, ?)",
-            (user_id, "boy")
-        )
-        conn.commit()
+    cursor.execute(
+        "INSERT OR REPLACE INTO genders(user_id, gender) VALUES(?, ?)",
+        (user_id, "boy")
+    )
+    conn.commit()
 
-        await update.message.reply_text(
-            "✅ جنسیت شما روی پسر ثبت شد"
-        )
-        return
+    await update.message.reply_text(
+        "✅ جنسیت شما روی پسر ثبت شد"
+    )
+    return
 
     if text == "👧 دختر":
-        cursor.execute(
-            "INSERT OR REPLACE INTO genders(user_id, gender) VALUES(?, ?)",
-            (user_id, "girl")
-        )
-        conn.commit()
+    cursor.execute(
+        "INSERT OR REPLACE INTO genders(user_id, gender) VALUES(?, ?)",
+        (user_id, "girl")
+    )
+    conn.commit()
 
-        await update.message.reply_text(
-            "✅ جنسیت شما روی دختر ثبت شد"
-        )
-        return
+    await update.message.reply_text(
+        "✅ جنسیت شما روی دختر ثبت شد"
+    )
+    return
 
     if text == "💬 شروع چت ناشناس":
         if user_id in pairs:

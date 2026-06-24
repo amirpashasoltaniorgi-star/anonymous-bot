@@ -406,6 +406,7 @@ app.add_handler(CommandHandler("start", start))
 app.add_handler(CommandHandler("admin", admin))
 app.add_handler(CommandHandler("reports", reports))
 app.add_handler(CommandHandler("broadcast", broadcast))
+app.add_handler(CommandHandler("ban", ban))
 
 app.add_handler(MessageHandler(filters.TEXT & ~filters.COMMAND, handle_message))
 app.add_handler(MessageHandler(

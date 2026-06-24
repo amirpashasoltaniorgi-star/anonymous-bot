@@ -306,14 +306,21 @@ async def admin(update: Update, context: ContextTypes.DEFAULT_TYPE):
     """)
 
     reported_users = cursor.fetchone()[0]
+cursor.execute("""
+SELECT COALESCE(SUM(count), 0)
+FROM reports
+""")
 
+total_reports = cursor.fetchone()[0]
     await update.message.reply_text(
-        f"📊 پنل ادمین\n\n"
-        f"👥 کاربران: {total_users}\n"
-        f"💬 چت فعال: {active_chats}\n"
-        f"⏳ در انتظار: {waiting}\n"
-        f"🚨 کاربران گزارش‌شده: {reported_users}"
-    )
+    f"📊 پنل ادمین\n\n"
+    f"👥 کاربران: {total_users}\n"
+    f"💬 چت فعال: {active_chats}\n"
+    f"⏳ در انتظار: {waiting}\n"
+    f"🚨 کاربران گزارش‌شده: {reported_users}\n"
+    f"📢 کل گزارش‌ها: {total_reports}"
+)
+        
 async def reports(update: Update, context: ContextTypes.DEFAULT_TYPE):
     if update.effective_user.id != ADMIN_ID:
         return

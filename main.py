@@ -121,14 +121,13 @@ async def end_chat(user_id, context, next_chat=False):
 
 
     # ---------- MESSAGE ----------
+# ---------- MESSAGE ----------
 async def handle_message(update: Update, context: ContextTypes.DEFAULT_TYPE):
     user_id = update.message.from_user.id
     text = update.message.text
 
     if text == "❓ راهنما":
-        await update.message.reply_text(
-            "💬 شروع چت\n🔄 نفر بعدی\n🔚 پایان چت"
-        )
+        await update.message.reply_text("💬 شروع چت\n🔄 نفر بعدی\n🔚 پایان چت")
         return
 
     if text == "🚨 گزارش کاربر":
@@ -147,14 +146,12 @@ async def handle_message(update: Update, context: ContextTypes.DEFAULT_TYPE):
             "UPDATE reports SET count=count+1 WHERE user_id=?",
             (partner,)
         )
-
         conn.commit()
 
         cursor.execute(
             "SELECT count FROM reports WHERE user_id=?",
             (partner,)
         )
-
         report_count = cursor.fetchone()[0]
 
         await update.message.reply_text(
@@ -168,8 +165,8 @@ async def handle_message(update: Update, context: ContextTypes.DEFAULT_TYPE):
             f"کاربر گزارش‌شده: {partner}\n"
             f"تعداد گزارش‌ها: {report_count}"
         )
-
         return
+
     if text == "💬 شروع چت ناشناس":
         if user_id in pairs:
             await update.message.reply_text("شما داخل چت هستید")
@@ -177,36 +174,22 @@ async def handle_message(update: Update, context: ContextTypes.DEFAULT_TYPE):
             await find_partner(user_id, context)
         return
 
+    if text == "👦 پسر":
+        cursor.execute(
+            "INSERT OR REPLACE INTO genders(user_id, gender) VALUES(?, ?)",
+            (user_id, "boy")
+        )
+        conn.commit()
+        await update.message.reply_text("✅ جنسیت شما روی پسر ثبت شد")
+        return
 
-if text == "👦 پسر":
-    cursor.execute(
-        "INSERT OR REPLACE INTO genders(user_id, gender) VALUES(?, ?)",
-        (user_id, "boy")
-    )
-    conn.commit()
-
-    await update.message.reply_text(
-        "✅ جنسیت شما روی پسر ثبت شد"
-    )
-    return
-
-if text == "👧 دختر":
-    cursor.execute(
-        "INSERT OR REPLACE INTO genders(user_id, gender) VALUES(?, ?)",
-        (user_id, "girl")
-    )
-    conn.commit()
-
-    await update.message.reply_text(
-        "✅ جنسیت شما روی دختر ثبت شد"
-    )
-    return
-
-    if text == "💬 شروع چت ناشناس":
-        if user_id in pairs:
-            await update.message.reply_text("شما داخل چت هستید")
-        else:
-            await find_partner(user_id, context)
+    if text == "👧 دختر":
+        cursor.execute(
+            "INSERT OR REPLACE INTO genders(user_id, gender) VALUES(?, ?)",
+            (user_id, "girl")
+        )
+        conn.commit()
+        await update.message.reply_text("✅ جنسیت شما روی دختر ثبت شد")
         return
 
     if text == "🔄 نفر بعدی":
@@ -228,7 +211,6 @@ if text == "👧 دختر":
             await end_chat(user_id, context)
     else:
         await update.message.reply_text("اول شروع چت رو بزن")
-
 
 # ---------- MEDIA ----------
 async def handle_media(update: Update, context: ContextTypes.DEFAULT_TYPE):

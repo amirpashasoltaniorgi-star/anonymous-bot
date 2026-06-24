@@ -223,78 +223,53 @@ async def handle_message(update: Update, context: ContextTypes.DEFAULT_TYPE):
 
 # ---------- MEDIA ----------
 async def handle_media(update: Update, context: ContextTypes.DEFAULT_TYPE):
-   
-     user_id = update.message.from_user.id
 
-if user_id not in pairs:
-        await update.message.reply_text("❌ ارسال ناموفق بود")
+    user_id = update.message.from_user.id
+
+    if user_id not in pairs:
+        await update.message.reply_text("اول شروع چت کن")
         return
 
     partner = pairs[user_id]
-
     msg = update.message
 
     try:
 
         if msg.photo:
-
             await context.bot.send_photo(
-
                 partner,
-
                 msg.photo[-1].file_id,
-
                 caption=msg.caption
-
             )
 
         elif msg.voice:
-
             await context.bot.send_voice(
-
                 partner,
-
                 msg.voice.file_id
-
             )
 
         elif msg.video:
-
             await context.bot.send_video(
-
                 partner,
-
                 msg.video.file_id,
-
                 caption=msg.caption
-
             )
 
         elif msg.document:
-
             await context.bot.send_document(
-
                 partner,
-
                 msg.document.file_id,
-
                 caption=msg.caption
-
             )
 
         elif msg.sticker:
-
             await context.bot.send_sticker(
-
                 partner,
-
                 msg.sticker.file_id
-
             )
 
-    except:
-
-        await update.message.reply_text("❌
+    except Exception:
+        await update.message.reply_text("❌ ارسال ناموفق بود")
     
 
 

@@ -178,8 +178,7 @@ async def handle_message(update: Update, context: ContextTypes.DEFAULT_TYPE):
         return
 
 
-        
-        if text == "👦 پسر":
+if text == "👦 پسر":
     cursor.execute(
         "INSERT OR REPLACE INTO genders(user_id, gender) VALUES(?, ?)",
         (user_id, "boy")

@@ -19,6 +19,14 @@ CREATE TABLE IF NOT EXISTS users (
 """)
 conn.commit()
 cursor.execute("""
+CREATE TABLE IF NOT EXISTS genders (
+    user_id INTEGER PRIMARY KEY,
+    gender TEXT
+)
+""")
+
+conn.commit()
+cursor.execute("""
 CREATE TABLE IF NOT EXISTS banned_users (
     user_id INTEGER PRIMARY KEY
 )
@@ -76,6 +84,7 @@ async def start(update: Update, context: ContextTypes.DEFAULT_TYPE):
     save_user(update.effective_user.id)
 
     keyboard = [
+    ["👦 پسر", "👧 دختر"],
     ["💬 شروع چت ناشناس"],
     ["🔄 نفر بعدی"],
     ["🚨 گزارش کاربر"],
@@ -207,6 +216,29 @@ async def handle_message(update: Update, context: ContextTypes.DEFAULT_TYPE):
         )
 
         return
+    if text == "👦 پسر":
+    cursor.execute(
+        "INSERT OR REPLACE INTO genders(user_id, gender) VALUES(?, ?)",
+        (user_id, "boy")
+    )
+    conn.commit()
+
+    await update.message.reply_text(
+        "✅ جنسیت شما روی پسر ثبت شد"
+    )
+    return
+
+if text == "👧 دختر":
+    cursor.execute(
+        "INSERT OR REPLACE INTO genders(user_id, gender) VALUES(?, ?)",
+        (user_id, "girl")
+    )
+    conn.commit()
+
+    await update.message.reply_text(
+        "✅ جنسیت شما روی دختر ثبت شد"
+    )
+    return
     if text == "💬 شروع چت ناشناس":
         if user_id in pairs:
             await update.message.reply_text("شما داخل چت هستید")

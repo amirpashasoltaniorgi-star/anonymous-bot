@@ -296,7 +296,7 @@ async def admin(update: Update, context: ContextTypes.DEFAULT_TYPE):
     active_chats = len(pairs) // 2
     waiting = 1 if waiting_user else 0
 
-        cursor.execute("""
+    cursor.execute("""
     SELECT COUNT(*)
     FROM reports
     WHERE count >= 1
@@ -304,13 +304,13 @@ async def admin(update: Update, context: ContextTypes.DEFAULT_TYPE):
 
     reported_users = cursor.fetchone()[0]
 
-    await update.message.reply_text(...)
-    f"📊 پنل ادمین\n\n"
-    f"👥 کاربران: {total_users}\n"
-    f"💬 چت فعال: {active_chats}\n"
-    f"⏳ در انتظار: {waiting}\n"
-    f"🚨 کاربران گزارش‌شده: {reported_users}"
-)
+    await update.message.reply_text(
+        f"📊 پنل ادمین\n\n"
+        f"👥 کاربران: {total_users}\n"
+        f"💬 چت فعال: {active_chats}\n"
+        f"⏳ در انتظار: {waiting}\n"
+        f"🚨 کاربران گزارش‌شده: {reported_users}"
+    )
         
 async def reports(update: Update, context: ContextTypes.DEFAULT_TYPE):
     if update.effective_user.id != ADMIN_ID:

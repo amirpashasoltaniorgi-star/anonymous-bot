@@ -13,11 +13,26 @@ conn = sqlite3.connect("users.db", check_same_thread=False)
 cursor = conn.cursor()
 
 cursor.execute("""
-CREATE TABLE IF NOT EXISTS users (
-    user_id INTEGER PRIMARY KEY
+cursor.execute("""
+CREATE TABLE IF NOT EXISTS reports (
+    user_id INTEGER PRIMARY KEY,
+    count INTEGER DEFAULT 0
 )
 """)
+
 conn.commit()
+CREATE TABLE IF NOT EXISTS profiles (
+    user_id INTEGER PRIMARY KEY,
+    name TEXT,
+    age TEXT,
+    gender TEXT,
+    city TEXT,
+    bio TEXT
+)
+""")
+
+conn.commit()
+
 cursor.execute("""
 CREATE TABLE IF NOT EXISTS genders (
     user_id INTEGER PRIMARY KEY,

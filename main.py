@@ -19,6 +19,13 @@ CREATE TABLE IF NOT EXISTS users (
 """)
 conn.commit()
 cursor.execute("""
+CREATE TABLE IF NOT EXISTS banned_users (
+    user_id INTEGER PRIMARY KEY
+)
+""")
+
+conn.commit()
+cursor.execute("""
 CREATE TABLE IF NOT EXISTS reports (
     user_id INTEGER PRIMARY KEY,
     count INTEGER DEFAULT 0
@@ -34,7 +41,13 @@ def save_user(user_id):
         (user_id,)
     )
     conn.commit()
+def is_banned(user_id):
+    cursor.execute(
+        "SELECT user_id FROM banned_users WHERE user_id=?",
+        (user_id,)
+    )
 
+    return cursor.fetchone() is not None
 # ---------- FIND PARTNER ----------
 async def find_partner(user_id, context):
     global waiting_user

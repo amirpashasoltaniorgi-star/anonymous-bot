@@ -12,7 +12,7 @@ pairs = {}
 conn = sqlite3.connect("users.db", check_same_thread=False)
 cursor = conn.cursor()
 
-cursor.execute("""
+
 cursor.execute("""
 CREATE TABLE IF NOT EXISTS reports (
     user_id INTEGER PRIMARY KEY,
@@ -135,7 +135,7 @@ async def end_chat(user_id, context, next_chat=False):
 
 
 
-    # ---------- MESSAGE ----------
+    
 # ---------- MESSAGE ----------
 async def handle_message(update: Update, context: ContextTypes.DEFAULT_TYPE):
     user_id = update.message.from_user.id
@@ -297,21 +297,15 @@ async def admin(update: Update, context: ContextTypes.DEFAULT_TYPE):
     FROM reports
     WHERE count >= 1
     """)
-    reported_users = cursor.fetchone()[0]
 
-    cursor.execute("""
-    SELECT COALESCE(SUM(count), 0)
-    FROM reports
-    """)
-    total_reports = cursor.fetchone()[0]
+    reported_users = cursor.fetchone()[0]
 
     await update.message.reply_text(
         f"📊 پنل ادمین\n\n"
         f"👥 کاربران: {total_users}\n"
         f"💬 چت فعال: {active_chats}\n"
         f"⏳ در انتظار: {waiting}\n"
-        f"🚨 کاربران گزارش‌شده: {reported_users}\n"
-        f"📢 کل گزارش‌ها: {total_reports}"
+        f"🚨 کاربران گزارش‌شده: {reported_users}"
     )
         
 async def reports(update: Update, context: ContextTypes.DEFAULT_TYPE):
